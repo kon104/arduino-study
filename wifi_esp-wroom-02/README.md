@@ -9,7 +9,10 @@
 
 ## パーツ一覧
 
-|パーツ|v3.3|v5.0|
-|---|---|---|
-|[ESP-WROOM-02 Wi-Fiモジュール](https://www.switch-science.com/catalog/2346/)|:white_check_mark:|:white_check_mark:|
+|パーツ|個数|v3.3|v5.0|
+|---|---|---|---|
+|[ESP-WROOM-02 Wi-Fiモジュール](https://www.switch-science.com/catalog/2346/)|1|:white_check_mark:|:white_check_mark:|
+|10kΩ 抵抗|3|:white_check_mark:|:white_check_mark:|
+|[【I-00538】低損失三端子レギュレーター 3.3V 500mA TA48M033F(S Q)](http://akizukidenshi.com/catalog/g/gI-00538/)|1|:heavy_minus_sign:|:white_check_mark:|
+
 
