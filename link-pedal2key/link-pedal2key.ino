@@ -16,10 +16,10 @@ int rotation = 0;
 int sw_state = 0;
 int x_pos = 0;
 int y_pos = 0;
-int flg_left = 0;
-int flg_right = 0;
-int flg_up = 0;
-int flg_down = 0;
+boolean stat_l = false;
+boolean stat_r = false;
+boolean stat_u = false;
+boolean stat_d = false;
 
 void printNumberOfRotation(int now, int max) {
   Serial.print("The pedal has rotated ");
@@ -27,6 +27,36 @@ void printNumberOfRotation(int now, int max) {
   Serial.print("/");
   Serial.print(MAX_ROTATION);
   Serial.println(" times.");
+}
+
+boolean ctrlStick2KeySmall(int pos, boolean stat, char key) {
+  if (pos < 256) {
+    if (!stat) {
+      Keyboard.press(key);
+      stat = true;
+    }
+  } else {
+    if (stat) {
+      Keyboard.release(key);
+      stat = false;
+    }
+  }
+  return stat;
+}
+
+boolean ctrlStick2KeyLarge(int pos, boolean stat, char key) {
+  if (pos > 768) {
+    if (!stat) {
+      Keyboard.press(key);
+      stat = true;
+    }
+  } else {
+    if (stat) {
+      Keyboard.release(key);
+      stat = false;
+    }
+  }
+  return stat;
 }
 
 void setup() {
@@ -60,50 +90,9 @@ void loop() {
       delay(WAITING_MSEC);     
     }    
   } else {
-    if (y_pos < 26) {
-      if (flg_left == 0) {
-        Keyboard.press(KEY_LEFT_ARROW);
-        flg_left = 1;
-      }
-    } else {
-      if (flg_left != 0) {
-        Keyboard.release(KEY_LEFT_ARROW);
-        flg_left = 0;
-      }
-    }
-    if (y_pos > 80) {
-      if (flg_right == 0) {
-        Keyboard.press(KEY_RIGHT_ARROW);
-        flg_right = 1;
-      }
-    } else {
-      if (flg_right != 0) {
-        Keyboard.release(KEY_RIGHT_ARROW);
-        flg_right = 0;
-      }
-    }
-
-    if (x_pos > 80) {
-      if (flg_up == 0) {
-        Keyboard.press(KEY_UP_ARROW);
-        flg_up = 1;
-      }
-    } else {
-      if (flg_up != 0) {
-        Keyboard.release(KEY_UP_ARROW);
-        flg_up = 0;
-      }
-    }
-    if (x_pos < 26) {
-      if (flg_down == 0) {
-        Keyboard.press(KEY_DOWN_ARROW);
-        flg_down = 1;
-      }
-    } else {
-      if (flg_down != 0) {
-        Keyboard.release(KEY_DOWN_ARROW);
-        flg_down = 0;
-      }
-    }
+    stat_l = ctrlStick2KeySmall(y_pos, stat_l, KEY_LEFT_ARROW);
+    stat_r = ctrlStick2KeyLarge(y_pos, stat_r, KEY_RIGHT_ARROW);
+    stat_d = ctrlStick2KeySmall(x_pos, stat_d, KEY_DOWN_ARROW);
+    stat_u = ctrlStick2KeyLarge(x_pos, stat_u, KEY_UP_ARROW);
   }
 }

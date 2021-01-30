@@ -26,16 +26,16 @@ void loop() {
   Serial.print(", Y = ");
   Serial.print(y_pos);
 
-  if (x_pos < 26) {
+  if (x_pos < 256) {
     Serial.print(" [LEFT]");
   } else
-  if (x_pos > 80) {
+  if (x_pos > 768) {
     Serial.print(" [RIGHT]");
   }
-  if (y_pos < 26) {
+  if (y_pos < 256) {
     Serial.print(" [UP]");
   } else
-  if (y_pos > 80) {
+  if (y_pos > 768) {
     Serial.print(" [DOWN]");
   }
 
