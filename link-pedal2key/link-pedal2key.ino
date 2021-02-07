@@ -13,6 +13,7 @@
 int pedal = LOW;
 int rotation = 0;
 
+#define MAX_POS 1024
 int sw_state = 0;
 int x_pos = 0;
 int y_pos = 0;
@@ -30,7 +31,7 @@ void printNumberOfRotation(int now, int max) {
 }
 
 boolean ctrlStick2KeySmall(int pos, boolean stat, char key) {
-  if (pos < 256) {
+  if (pos < (MAX_POS / 4 * 1)) {
     if (!stat) {
       Keyboard.press(key);
       stat = true;
@@ -45,7 +46,7 @@ boolean ctrlStick2KeySmall(int pos, boolean stat, char key) {
 }
 
 boolean ctrlStick2KeyLarge(int pos, boolean stat, char key) {
-  if (pos > 768) {
+  if (pos > (MAX_POS / 4 * 3)) {
     if (!stat) {
       Keyboard.press(key);
       stat = true;
