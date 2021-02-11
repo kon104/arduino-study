@@ -1,11 +1,11 @@
 #include "Keyboard.h"
 
-#define BIKE_PIN 7
+#define BIKE_PIN 4
 #define LED_PIN 13
 
-#define SW_PIN 2
+#define SW_PIN 7
 #define X_PIN A0
-#define Y_PIN A1
+#define Y_PIN A3
 
 #define WAITING_MSEC 500
 
