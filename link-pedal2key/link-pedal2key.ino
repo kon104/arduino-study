@@ -1,5 +1,6 @@
 #include "Keyboard.h"
 /*
+// definitions to log for debug when not to use 'keyboard.h'.
 #define KEY_UP_ARROW    'U'
 #define KEY_DOWN_ARROW  'D'
 #define KEY_LEFT_ARROW  'L'
@@ -16,13 +17,10 @@
 #define WAITING_MSEC 500
 
 #define MAX_ROTATION 3
-int pedal = LOW;
 int rotation = 0;
+boolean stat_p = false;
 
 #define MAX_POS 1024
-int sw_state = 0;
-int x_pos = 0;
-int y_pos = 0;
 boolean stat_l = false;
 boolean stat_r = false;
 boolean stat_u = false;
@@ -90,23 +88,26 @@ void setup() {
 
 void loop() {
   // put your main code here, to run repeatedly:
-  pedal = digitalRead(BIKE_PIN);
+  int pedal = digitalRead(BIKE_PIN);
   if (pedal == LOW) {
-    rotation++;
-    printNumberOfRotation(rotation, MAX_ROTATION);
-    if (rotation >= MAX_ROTATION) {
-      Keyboard.press(KEY_UP_ARROW);
-      Keyboard.release(KEY_UP_ARROW);
-      digitalWrite(LED_PIN, HIGH);
-      delay(WAITING_MSEC);
-      digitalWrite(LED_PIN, LOW);
-      rotation = 0;
-    } else {
-      delay(WAITING_MSEC);     
+    if (!stat_p) {
+      rotation++;
+      printNumberOfRotation(rotation, MAX_ROTATION);
+      if (rotation >= MAX_ROTATION) {
+        Keyboard.press(KEY_UP_ARROW);
+        Keyboard.release(KEY_UP_ARROW);
+        digitalWrite(LED_PIN, HIGH);
+        delay(WAITING_MSEC);
+        digitalWrite(LED_PIN, LOW);
+        rotation = 0;
+      }
+      stat_p = true;
     }
+  } else {
+    stat_p = false;
   }
-  x_pos = analogRead(X_PIN);
-  y_pos = analogRead(Y_PIN);
+  int x_pos = analogRead(X_PIN);
+  int y_pos = analogRead(Y_PIN);
   stat_l = ctrlStick2KeySmall(y_pos, stat_l, KEY_LEFT_ARROW);
   stat_r = ctrlStick2KeyLarge(y_pos, stat_r, KEY_RIGHT_ARROW);
   stat_d = ctrlStick2KeySmall(x_pos, stat_d, KEY_DOWN_ARROW);
