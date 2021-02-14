@@ -1,4 +1,10 @@
 #include "Keyboard.h"
+/*
+#define KEY_UP_ARROW    'U'
+#define KEY_DOWN_ARROW  'D'
+#define KEY_LEFT_ARROW  'L'
+#define KEY_RIGHT_ARROW 'R'
+*/
 
 #define BIKE_PIN 4
 #define LED_PIN 13
@@ -30,16 +36,25 @@ void printNumberOfRotation(int now, int max) {
   Serial.println(" times.");
 }
 
+void printKeyboardEvent(String event, char key) {
+  Serial.print(event);
+  Serial.print(" keyboard [");
+  Serial.print(key);
+  Serial.println("]");
+}
+
 boolean ctrlStick2KeySmall(int pos, boolean stat, char key) {
   if (pos < (MAX_POS / 4 * 1)) {
     if (!stat) {
       Keyboard.press(key);
       stat = true;
+      printKeyboardEvent("Pressed", key);
     }
   } else {
     if (stat) {
       Keyboard.release(key);
       stat = false;
+      printKeyboardEvent("Released", key);
     }
   }
   return stat;
@@ -50,11 +65,13 @@ boolean ctrlStick2KeyLarge(int pos, boolean stat, char key) {
     if (!stat) {
       Keyboard.press(key);
       stat = true;
+      printKeyboardEvent("Pressed", key);
     }
   } else {
     if (stat) {
       Keyboard.release(key);
       stat = false;
+      printKeyboardEvent("Released", key);
     }
   }
   return stat;
@@ -74,9 +91,6 @@ void setup() {
 void loop() {
   // put your main code here, to run repeatedly:
   pedal = digitalRead(BIKE_PIN);
-  x_pos = analogRead(X_PIN);
-  y_pos = analogRead(Y_PIN);
-
   if (pedal == LOW) {
     rotation++;
     printNumberOfRotation(rotation, MAX_ROTATION);
@@ -89,11 +103,12 @@ void loop() {
       rotation = 0;
     } else {
       delay(WAITING_MSEC);     
-    }    
-  } else {
-    stat_l = ctrlStick2KeySmall(y_pos, stat_l, KEY_LEFT_ARROW);
-    stat_r = ctrlStick2KeyLarge(y_pos, stat_r, KEY_RIGHT_ARROW);
-    stat_d = ctrlStick2KeySmall(x_pos, stat_d, KEY_DOWN_ARROW);
-    stat_u = ctrlStick2KeyLarge(x_pos, stat_u, KEY_UP_ARROW);
+    }
   }
+  x_pos = analogRead(X_PIN);
+  y_pos = analogRead(Y_PIN);
+  stat_l = ctrlStick2KeySmall(y_pos, stat_l, KEY_LEFT_ARROW);
+  stat_r = ctrlStick2KeyLarge(y_pos, stat_r, KEY_RIGHT_ARROW);
+  stat_d = ctrlStick2KeySmall(x_pos, stat_d, KEY_DOWN_ARROW);
+  stat_u = ctrlStick2KeyLarge(x_pos, stat_u, KEY_UP_ARROW);
 }
