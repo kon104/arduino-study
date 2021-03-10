@@ -1,11 +1,14 @@
-#include "Keyboard.h"
-/*
+#define DEBUGLOG 0
+
+#if DEBUGLOG
 // definitions to log for debug when not to use 'keyboard.h'.
 #define KEY_UP_ARROW    'U'
 #define KEY_DOWN_ARROW  'D'
 #define KEY_LEFT_ARROW  'L'
 #define KEY_RIGHT_ARROW 'R'
-*/
+#else
+#include "Keyboard.h"
+#endif
 
 #define BIKE_PIN 4
 #define LED_PIN 13
@@ -14,7 +17,7 @@
 #define X_PIN A0
 #define Y_PIN A3
 
-#define WAITING_MSEC 500
+#define WAITING_MSEC 125
 
 #define MAX_ROTATION 3
 int rotation = 0;
@@ -42,7 +45,7 @@ void printKeyboardEvent(String event, char key) {
 }
 
 boolean ctrlStick2KeySmall(int pos, boolean stat, char key) {
-  if (pos < (MAX_POS / 4 * 1)) {
+  if (pos < (MAX_POS / 5)) {
     if (!stat) {
       Keyboard.press(key);
       stat = true;
@@ -59,7 +62,7 @@ boolean ctrlStick2KeySmall(int pos, boolean stat, char key) {
 }
 
 boolean ctrlStick2KeyLarge(int pos, boolean stat, char key) {
-  if (pos > (MAX_POS / 4 * 3)) {
+  if (pos > (MAX_POS - MAX_POS / 5)) {
     if (!stat) {
       Keyboard.press(key);
       stat = true;
@@ -108,8 +111,8 @@ void loop() {
   }
   int x_pos = analogRead(X_PIN);
   int y_pos = analogRead(Y_PIN);
-  stat_l = ctrlStick2KeySmall(y_pos, stat_l, KEY_LEFT_ARROW);
-  stat_r = ctrlStick2KeyLarge(y_pos, stat_r, KEY_RIGHT_ARROW);
   stat_d = ctrlStick2KeySmall(x_pos, stat_d, KEY_DOWN_ARROW);
   stat_u = ctrlStick2KeyLarge(x_pos, stat_u, KEY_UP_ARROW);
+  stat_l = ctrlStick2KeySmall(y_pos, stat_l, KEY_LEFT_ARROW);
+  stat_r = ctrlStick2KeyLarge(y_pos, stat_r, KEY_RIGHT_ARROW);
 }
